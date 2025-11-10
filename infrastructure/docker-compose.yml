@@ -1,0 +1,66 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    volumes:
+      - mosquitto:/mosquitto/data/
+      - ./mosquitto:/mosquitto/config/
+    ports:
+      - "1883:1883"
+    networks:
+      hass:
+    restart: unless-stopped
+
+  homeassistant:
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    container_name: homeassistant 
+    volumes:
+      - ./homeassistant:/config:rw
+    ports:
+      - "8123:8123"
+    networks:
+      hass:
+    restart: unless-stopped
+
+  influx:
+    image: influxdb:alpine
+    container_name: influx
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=MOSTR
+      - DOCKER_INFLUXDB_INIT_BUCKET=homeassistant
+    volumes:
+      - influx:/var/lib/influxdb2
+    ports:
+      - "8086:8086"
+    networks:
+      hass:
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.4.19
+    container_name: grafana
+    environment:
+      - GF_SERVER_PROTOCOL=http
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+    volumes:
+      - ./grafana:/etc/grafana/provisioning
+      - grafana:/var/lib/grafana:rw
+    ports:
+      - "3000:3000"
+    networks:
+      hass:
+    depends_on:
+      - influx
+    restart: unless-stopped
+
+networks:
+  hass:
+    driver: bridge
+
+volumes:
+  grafana:
+  influx:
+  mosquitto:
