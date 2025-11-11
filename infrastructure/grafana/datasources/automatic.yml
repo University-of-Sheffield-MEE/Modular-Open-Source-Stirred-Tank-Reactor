@@ -2,6 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: influxdb
+    uid: "influxdb"
     type: influxdb
     typeName: InfluxDB
     typeLogoUrl: public/app/plugins/datasource/influxdb/img/influxdb_logo.svg
@@ -16,4 +17,6 @@ datasources:
       httpMode: POST
       organization: MOSTR
       version: Flux
+    secureJsonData:
+      token: YOUR_INFLUXDB_TOKEN_HERE
     readOnly: false

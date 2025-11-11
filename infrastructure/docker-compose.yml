@@ -45,6 +45,7 @@ services:
     environment:
       - GF_SERVER_PROTOCOL=http
       - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
     volumes:
       - ./grafana:/etc/grafana/provisioning
       - grafana:/var/lib/grafana:rw
