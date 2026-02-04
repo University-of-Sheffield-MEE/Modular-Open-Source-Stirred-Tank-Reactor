@@ -9,7 +9,7 @@
 #include <tasks/Encoder.cpp>
 #include <tasks/I2CHub.cpp>
 
-#include "UNIT_HBRIDGE.h"
+#include "M5UnitHbridge.h"
 #include "events.h"
 
 class HBridgeTask : public Task, public TSEvents::EventHandler {
@@ -35,7 +35,7 @@ class HBridgeTask : public Task, public TSEvents::EventHandler {
       return true;
     }
     driver.begin(&Wire, address);
-    driver.setDriverDirection(1);
+    driver.setDriverDirection(HBRIDGE_FORWARD);
     lastAvg = millis();
     lastAvgCount = 0;
     return true;
@@ -89,7 +89,7 @@ class HBridgeTask : public Task, public TSEvents::EventHandler {
   uint16_t potvalue = 0;
   uint16_t pumppwm = 0;
   uint16_t stirrerRpm = 0;
-  UNIT_HBRIDGE driver;
+  M5UnitHbridge driver;
   int address;
   int lastAvg;
   uint32_t lastAvgCount;
