@@ -53,7 +53,7 @@ class EncoderTask : public Task, public TSEvents::EventEmitter {
     uint32_t rawcount = encoder.getEncoderValue();
     double count = rawcount;
     double dt = double(t - lastAvg);
-    double rpm = (double(count - lastAvgCount) / 1400.00) / dt;
+    double rpm = (double(count - lastAvgCount) / 420.00) / dt;
     rpm = rpm * 60000.00;
     updateRollingAverage(rpm);
     dispatch(event, &averageRPM, sizeof(double));
