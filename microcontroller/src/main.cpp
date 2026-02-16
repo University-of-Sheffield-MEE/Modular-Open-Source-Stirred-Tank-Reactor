@@ -76,7 +76,7 @@ class EventBridge : TSEvents::EventHandler {
       }
       case ANGLE_SENSOR_1_DATA: {
         uint16_t rpm = *(uint16_t*)e.data;
-        rpm = rpm * 150 / 4096;
+        rpm = rpm * 380 / 4096;
         HBridgeOutputTask1->setRPM(rpm);
         break;
       }
@@ -132,9 +132,9 @@ void setup() {
   i2cHubTask = new I2CHubTask(ts, e, 0x70, Wire);
   // PaHub Connection 0 - 3 way Splitter 1 (stirrer)
   // Splitter 1 - Connection 2 - Ext-Encoder (Stirrer)
-  encoderTask1 = new EncoderTask(ts, e, i2cHubTask, 0, ENCODER_1_DATA, Wire, 100 * TASK_MILLISECOND);  // for encoder
+  encoderTask1 = new EncoderTask(ts, e, i2cHubTask, 0, ENCODER_1_DATA, Wire, 25 * TASK_MILLISECOND);  // for encoder
   // Splitter 1 - Connection 1 - Hbridge (Stirrer)
-  HBridgeOutputTask1 = new HBridgeTask(ts, e, i2cHubTask, encoderTask1, 0, Wire, 0x20, 100 * TASK_MILLISECOND);
+  HBridgeOutputTask1 = new HBridgeTask(ts, e, i2cHubTask, encoderTask1, 0, Wire, 0x20, 25 * TASK_MILLISECOND);
   // Splitter 1 - Connection 3 - EMPTY
 
   // PaHub Connection 1 - Hbridge (Pump)

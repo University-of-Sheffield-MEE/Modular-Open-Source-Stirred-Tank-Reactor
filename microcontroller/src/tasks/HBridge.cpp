@@ -51,7 +51,7 @@ class HBridgeTask : public Task, public TSEvents::EventHandler {
     if (channel == 0) {  // Stirrer
 
       rpm = encoder->latestRPM;
-      if (rpm < 0 || rpm > 1e5) {
+      if (rpm < 0 || rpm > 2000) {
         return true;
       }
       if (rpmSetpoint == 0) {
@@ -62,6 +62,12 @@ class HBridgeTask : public Task, public TSEvents::EventHandler {
         rpmSetpoint = constrain(rpmSetpoint, 0, maxRpm);
         rpmError = rpmSetpoint - rpm;
         rpmCumError += rpmError;
+
+        // *** SAFETY ADDITION ***
+        // Prevent "Windup": Don't let the memory get too huge.
+        // +/- 5000 is enough to reach full power, but prevents "runaway" behavior.
+        rpmCumError = constrain(rpmCumError, -5000, 5000);
+
         driverspeed = midPWM + round(rpmKp * rpmError + rpmKi * rpmCumError);
         driverspeed = constrain(driverspeed, 0, maxPWM);
         driver.setDriverSpeed8Bits(driverspeed);
@@ -106,12 +112,12 @@ class HBridgeTask : public Task, public TSEvents::EventHandler {
   int maxPWM = 255;
   int midPWM = 127;
 
-  int maxRpm = 120;
-  int rpmSetpoint = 100;
+  int maxRpm = 380;
+  int rpmSetpoint = 350;
 
   float rpmError = 0.0;
   float rpmCumError = 0.0;
 
-  float rpmKp = 1.4;
-  float rpmKi = 0.1;
+  float rpmKp = 0.6;
+  float rpmKi = 0.05;
 };

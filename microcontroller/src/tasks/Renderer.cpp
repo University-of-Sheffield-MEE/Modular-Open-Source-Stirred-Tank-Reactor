@@ -64,7 +64,7 @@ class RendererTask : public Task, public TSEvents::EventHandler {
         break;
 
       case ANGLE_SENSOR_1_DATA:
-        renderState.AngleSensor1Data = *(uint16_t*)event.data * 140 / 4096;
+        renderState.AngleSensor1Data = *(uint16_t*)event.data * 380 / 4096; // 380 is the rpm limit
         render(renderState);
         break;
       case ANGLE_SENSOR_2_DATA:
